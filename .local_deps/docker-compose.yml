@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'urlshortener'
+      MYSQL_USER: 'servus'
+      MYSQL_PASSWORD: 'servus'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-database:/var/lib/mysql
+volumes:
+  my-database:
