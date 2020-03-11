@@ -12,15 +12,28 @@
     <url>https://bitbucket.ibai.eus/projects/GH/repos/url-shortener/browse</url>
 
     <properties>
-        <hamcrest.version>1.3</hamcrest.version>
+        <db.unit.version>2.5.4</db.unit.version>
+        <db.unit.spring.version>1.3.0</db.unit.spring.version>
+        <flyway.version>5.2.4</flyway.version>
+        <h2.version>1.4.199</h2.version>
+        <hamcrest.version>2.2</hamcrest.version>
+        <jackson.version>2.9.7</jackson.version>
+        <jacoco.version>0.8.5</jacoco.version>
+        <jaxb.version>2.3.2</jaxb.version>
         <junit.version>5.5.2</junit.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.18.10</lombok.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.version>3.8.0</maven.compiler.version>
-        <maven.surfire.version>2.22.1</maven.surfire.version>
+        <maven.compiler.version>3.8.1</maven.compiler.version>
+        <maven.jar.version>3.2.0</maven.jar.version>
+        <maven.project.info.reports.version>3.0.0</maven.project.info.reports.version>
+        <maven.site.version>3.8.2</maven.site.version>
+        <maven.surfire.version>2.22.2</maven.surfire.version>
+        <mockito.version>3.3.0</mockito.version>
+        <mysql.version>8.0.18</mysql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <rest.assured.version>4.2.0</rest.assured.version>
         <spring.boot.version>2.2.5.RELEASE</spring.boot.version>
     </properties>
 
@@ -28,7 +41,7 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>2.3.2</version>
+            <version>${jaxb.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -44,7 +57,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.7</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -59,12 +72,12 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.18</version>
+            <version>${mysql.version}</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>5.2.4</version>
+            <version>${flyway.version}</version>
         </dependency>
 
         <!-- TEST -->
@@ -96,25 +109,14 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
-            <version>2.2</version>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>3.3.0</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <version>2.0.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.6.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -125,25 +127,25 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
             <scope>test</scope>
-            <version>1.4.199</version>
         </dependency>
         <dependency>
             <groupId>com.github.springtestdbunit</groupId>
             <artifactId>spring-test-dbunit</artifactId>
-            <version>1.3.0</version>
+            <version>${db.unit.spring.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
-            <version>2.5.4</version>
+            <version>${db.unit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>4.2.0</version>
+            <version>${rest.assured.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -152,24 +154,16 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.1.0</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.2</version>
-                </plugin>
-                <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.0</version>
+                    <version>${maven.compiler.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.1</version>
+                    <version>${maven.surfire.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>${maven.jar.version}</version>
                     <configuration>
                         <archive>
                             <manifest>
@@ -179,16 +173,18 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
-                </plugin>
-                <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>${maven.site.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>${maven.surfire.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${maven.project.info.reports.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
