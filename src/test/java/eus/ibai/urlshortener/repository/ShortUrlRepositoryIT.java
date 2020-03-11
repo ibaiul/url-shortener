@@ -34,8 +34,11 @@ class ShortUrlRepositoryIT {
     private ShortUrlRepository repository;
 
     @Test
-    void when_savingAnEntity_Then_ItCanBeRetrieved() {
-        ShortUrl entity = ShortUrl.builder().key("key").url("url").enabled(true).build();
+    void given_AValidEntity_when_savingAnEntity_Then_ItCanBeRetrieved() {
+        ShortUrl entity = ShortUrl.builder()
+                .key("key")
+                .url("url")
+                .enabled(true).build();
 
         entity = repository.save(entity);
         repository.flush();
@@ -60,7 +63,7 @@ class ShortUrlRepositoryIT {
 
     @Test
     @DatabaseSetup("/dataset/dataset.xml")
-    void when_GettingAllEntites_Then_ReturnAllEnabled() {
+    void when_GettingAllEntities_Then_ReturnAllEnabled() {
         List<ShortUrl> list = repository.findAllEnabled();
 
         assertThat(list.size(), is(2));
@@ -68,7 +71,7 @@ class ShortUrlRepositoryIT {
 
     @Test
     @DatabaseSetup("/dataset/dataset.xml")
-    void given_ExistingAndEnabledId_when_GettingById_Then_ReturnOne() {
+    void given_AnExistingAndEnabledId_when_GettingById_Then_ReturnOne() {
         Optional<ShortUrl> optional = repository.findByIdIfEnabled(ENABLED_ENTITY_ID);
 
         assertThat(optional.isPresent(), is(true));
@@ -76,7 +79,7 @@ class ShortUrlRepositoryIT {
 
     @Test
     @DatabaseSetup("/dataset/dataset.xml")
-    void given_ExistingAndDisabledId_when_GettingById_Then_ReturnZero() {
+    void given_AnExistingAndDisabledId_when_GettingById_Then_ReturnZero() {
         Optional<ShortUrl> optional = repository.findByIdIfEnabled(DISABLED_ENTITY_ID);
 
         assertThat(optional.isPresent(), is(false));
@@ -84,7 +87,7 @@ class ShortUrlRepositoryIT {
 
     @Test
     @DatabaseSetup("/dataset/dataset.xml")
-    void when_GettingExistingByKey_Then_ReturnOne() {
+    void given_AnExistingKey_when_GettingByKey_Then_ReturnOne() {
         Optional<ShortUrl> optional = repository.findByKey("AAA");
 
         assertThat(optional.isPresent(), is(true));
@@ -92,7 +95,7 @@ class ShortUrlRepositoryIT {
 
     @Test
     @DatabaseSetup("/dataset/dataset.xml")
-    void when_GettingNonExistingById_Then_ReturnNothing() {
+    void given_ANonExistingId_when_GettingById_Then_ReturnNothing() {
         Optional<ShortUrl> optional = repository.findById(DISABLED_ENTITY_ID);
 
         assertThat(optional.isEmpty(), is(true));

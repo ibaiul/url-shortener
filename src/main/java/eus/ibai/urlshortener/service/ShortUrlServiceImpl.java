@@ -68,7 +68,7 @@ public class ShortUrlServiceImpl implements ShortUrlService {
     public void disable(UUID id) {
         int disabled = repository.disableById(id);
         if (disabled == 0) {
-            throw new EntityNotFoundException("Entity does not exist or it is already disabled.");
+            throw new EntityNotFoundException("Entity does not exist or it was deleted.");
         }
     }
 }
