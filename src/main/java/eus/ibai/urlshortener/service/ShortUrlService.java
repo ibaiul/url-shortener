@@ -11,7 +11,7 @@ public interface ShortUrlService {
 
     List<ShortUrlDto> getAll();
 
-    ShortUrlDto create(CreateShortUrlDto createDto);
+    UUID create(CreateShortUrlDto createDto);
 
     ShortUrlDto getByKey(String key);
 

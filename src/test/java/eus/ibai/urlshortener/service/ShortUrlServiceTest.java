@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -100,18 +99,15 @@ class ShortUrlServiceTest {
     }
 
     @Test
-    void when_CreatingEntity_Then_ReturnDto() {
+    void when_CreatingEntity_Then_ReturnIdOfCreatedEntity() {
         CreateShortUrlDto createDto = new CreateShortUrlDto("url");
         ShortUrl savedEntity = testEntity();
         when(repository.save(any())).thenReturn(savedEntity);
         when(generator.generate(anyInt())).thenReturn("key");
 
-        ShortUrlDto dto = service.create(createDto);
+        UUID id = service.create(createDto);
 
-        assertThat(dto.getId(), notNullValue());
-        assertThat(dto.getCreatedOn(), notNullValue());
-        assertThat(dto.getKey(), is(savedEntity.getKey()));
-        assertThat(dto.getUrl(), is(savedEntity.getUrl()));
+        assertThat(id, is(savedEntity.getId()));
     }
 
     @Test

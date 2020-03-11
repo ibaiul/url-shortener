@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.UUID;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,19 +24,19 @@ class ShortUrlServiceIT {
     private ShortUrlService service;
 
     @Test
-    void when_CreatingEntity_Then_ReturnDtoWithAllRequiredFieldsPopulated() {
-        CreateShortUrlDto createDto = new CreateShortUrlDto("url");
+    void given_AValidCreateEntityDto_when_CreatingEntity_Then_EnsureEntityHasAllRequiredFields() {
+        String url = "url";
+        CreateShortUrlDto createDto = new CreateShortUrlDto(url);
 
-        ShortUrlDto dto = service.create(createDto);
+        UUID id = service.create(createDto);
 
-        assertThat(dto.getId(), notNullValue());
-        assertThat(dto.getKey(), is(notNullValue()));
-        assertThat(dto.getUrl(), is(createDto.getUrl()));
-        ShortUrl entity = repository.findById(dto.getId()).orElseThrow();
-        assertThat(entity.getId(), is(dto.getId()));
-        assertThat(entity.getKey(), is(dto.getKey()));
-        assertThat(entity.getUrl(), is(dto.getUrl()));
+        assertThat(id, notNullValue());
+        ShortUrl entity = repository.findById(id).orElseThrow();
+        assertThat(entity, notNullValue());
+        assertThat(entity.getId(), is(id));
+        assertThat(entity.getUrl(), is(url));
+        assertThat(entity.getKey(), notNullValue());
         assertThat(entity.isEnabled(), is(true));
-        assertThat(entity.getCreatedOn(), is(notNullValue()));
+        assertThat(entity.getCreatedOn(), notNullValue());
     }
 }

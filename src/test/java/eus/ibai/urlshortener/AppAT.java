@@ -57,12 +57,17 @@ class AppAT {
 
     ShortUrlDto createShortUrl(String longUrl) {
         CreateShortUrlDto createDto = new CreateShortUrlDto(longUrl);
-        return given().contentType("application/json")
+        String location = given().contentType("application/json")
                 .body(createDto)
                 .when()
-                .post(crudBaseUri).then()
+                .post(crudBaseUri)
+                .getHeader(HttpHeaders.LOCATION);
+
+        return given().contentType("application/json")
+                .when()
+                .get(location).then()
                 .assertThat()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .extract()
                 .as(ShortUrlDto.class);
     }

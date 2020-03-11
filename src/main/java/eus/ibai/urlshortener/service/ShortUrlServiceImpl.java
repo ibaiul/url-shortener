@@ -40,10 +40,13 @@ public class ShortUrlServiceImpl implements ShortUrlService {
     }
 
     @Override
-    public ShortUrlDto create(CreateShortUrlDto createDto) {
-        ShortUrl entity = ShortUrl.builder().key(generator.generate(KEY_LENGTH)).url(createDto.getUrl()).enabled(true).build();
+    public UUID create(CreateShortUrlDto createDto) {
+        ShortUrl entity = ShortUrl.builder()
+                .key(generator.generate(KEY_LENGTH))
+                .url(createDto.getUrl())
+                .enabled(true).build();
         entity = repository.save(entity);
-        return new ShortUrlDto(entity);
+        return entity.getId();
     }
 
     @Override

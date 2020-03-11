@@ -21,8 +21,8 @@ public class RedirectController {
     @GetMapping("/{key}")
     public ResponseEntity<Void> getShortUrl(@PathVariable String key, HttpServletResponse response) {
         ShortUrlDto dto = service.getByKey(key);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(dto.getUrl()));
-        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+
+        URI location = URI.create(dto.getUrl());
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).location(location).build();
     }
 }

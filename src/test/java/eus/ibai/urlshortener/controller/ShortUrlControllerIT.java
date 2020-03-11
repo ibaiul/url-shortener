@@ -7,10 +7,12 @@ import eus.ibai.urlshortener.exception.EntityNotFoundException;
 import eus.ibai.urlshortener.service.ShortUrlService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import javax.annotation.PostConstruct;
@@ -72,7 +74,6 @@ public class ShortUrlControllerIT {
     @Test
     void given_NoExistentShortUrlId_when_RequestGetOne_Then_ReturnNotFound() {
         UUID id = UUID.randomUUID();
-        ShortUrlDto dto = new ShortUrlDto(id, "AAA", "url", new Date());
         when(service.getById(id)).thenThrow(new EntityNotFoundException());
         String url = uri + '/' + id;
 
@@ -99,21 +100,19 @@ public class ShortUrlControllerIT {
     }
 
     @Test
-    void given_ValidCreateShortUrlDto_when_RequestStoreOne_Then_ReturnDto() {
+    void given_ValidCreateShortUrlDto_when_RequestStoreOne_Then_ReturnResourcePathInLocationHeader() {
         CreateShortUrlDto createDto = new CreateShortUrlDto("https://www.ibai.eus");
-        ShortUrlDto dto = new ShortUrlDto(UUID.randomUUID(), "key", createDto.getUrl(), new Date());
-        when(service.create(createDto)).thenReturn(dto);
+        UUID id = UUID.randomUUID();
+        when(service.create(createDto)).thenReturn(id);
+        String expectedPath = uri + '/' + id;
 
-        ShortUrlDto result = given().contentType("application/json")
+        given().contentType("application/json")
                 .body(createDto)
                 .when()
                 .post(uri).then()
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value())
-                .extract()
-                .as(ShortUrlDto.class);
-
-        assertThat(result, is(dto));
+                .header(HttpHeaders.LOCATION, expectedPath);
     }
 
     @ParameterizedTest
