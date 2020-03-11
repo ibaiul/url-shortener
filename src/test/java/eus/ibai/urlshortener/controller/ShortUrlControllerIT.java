@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.*;
@@ -160,13 +162,14 @@ public class ShortUrlControllerIT {
     }
 
     private static Stream<Arguments> provideInvalidCreateShortUrlDtos() {
+        String longUrl = "https://www.ibai.eus/go?param=" + IntStream.range(0, 500).mapToObj(Integer::toString).collect(Collectors.joining());
         return Stream.of(
                 Arguments.of(new CreateShortUrlDto(null)),
                 Arguments.of(new CreateShortUrlDto("")),
                 Arguments.of(new CreateShortUrlDto("           ")),
                 Arguments.of(new CreateShortUrlDto("http://aa")),
                 Arguments.of(new CreateShortUrlDto("www.ibai.eus")),
-                Arguments.of(new CreateShortUrlDto("servus://www.ibai.eus"))
-        );
+                Arguments.of(new CreateShortUrlDto("servus://www.ibai.eus")),
+                Arguments.of(new CreateShortUrlDto(longUrl)));
     }
 }

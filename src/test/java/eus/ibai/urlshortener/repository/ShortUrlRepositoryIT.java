@@ -6,6 +6,7 @@ import eus.ibai.urlshortener.entity.ShortUrl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
@@ -13,10 +14,13 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class, DbUnitTestExecutionListener.class})
@@ -38,6 +42,20 @@ class ShortUrlRepositoryIT {
 
         assertThat(entity.getId(), notNullValue());
         assertThat(entity.getCreatedOn(), notNullValue());
+    }
+
+    @Test
+    void given_AnEntityWithUrlLongerThan1020_when_savingAnEntity_Then_ThrowException() {
+        String longUrl = IntStream.range(0, 500).mapToObj(Integer::toString).collect(Collectors.joining());
+        ShortUrl entity = ShortUrl.builder()
+                .key("key")
+                .url(longUrl)
+                .enabled(true).build();
+
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            repository.save(entity);
+            repository.flush();
+        });
     }
 
     @Test

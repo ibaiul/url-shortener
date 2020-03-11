@@ -4,9 +4,11 @@ import eus.ibai.urlshortener.dto.CreateShortUrlDto;
 import eus.ibai.urlshortener.dto.ShortUrlDto;
 import eus.ibai.urlshortener.entity.ShortUrl;
 import eus.ibai.urlshortener.exception.EntityNotFoundException;
+import eus.ibai.urlshortener.exception.ValidationException;
 import eus.ibai.urlshortener.generator.RandomUrlGenerator;
 import eus.ibai.urlshortener.repository.ShortUrlRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -45,7 +47,12 @@ public class ShortUrlServiceImpl implements ShortUrlService {
                 .key(generator.generate(KEY_LENGTH))
                 .url(createDto.getUrl())
                 .enabled(true).build();
-        entity = repository.save(entity);
+        try {
+            entity = repository.save(entity);
+        } catch (DataIntegrityViolationException e) {
+            throw new ValidationException(e);
+        }
+
         return entity.getId();
     }
 

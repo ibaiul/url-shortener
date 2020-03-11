@@ -4,6 +4,7 @@ import eus.ibai.urlshortener.dto.CreateShortUrlDto;
 import eus.ibai.urlshortener.dto.ShortUrlDto;
 import eus.ibai.urlshortener.entity.ShortUrl;
 import eus.ibai.urlshortener.exception.EntityNotFoundException;
+import eus.ibai.urlshortener.exception.ValidationException;
 import eus.ibai.urlshortener.generator.RandomUrlGenerator;
 import eus.ibai.urlshortener.repository.ShortUrlRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -108,6 +112,15 @@ class ShortUrlServiceTest {
         UUID id = service.create(createDto);
 
         assertThat(id, is(savedEntity.getId()));
+    }
+
+    @Test
+    void given_AUrlLongerThan1020_when_CreatingEntity_Then_ThrowValidationException() {
+        String longUrl = IntStream.range(0, 500).mapToObj(Integer::toString).collect(Collectors.joining());
+        CreateShortUrlDto createDto = new CreateShortUrlDto(longUrl);
+        when(repository.save(any())).thenThrow(new DataIntegrityViolationException(""));
+
+        assertThrows(ValidationException.class, () -> service.create(createDto));
     }
 
     @Test

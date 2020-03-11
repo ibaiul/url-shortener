@@ -15,6 +15,6 @@ public class CreateShortUrlDto {
 
     @NotEmpty
     @URL
-    @Size(min = 10)
+    @Size(min = 10, max = 1020)
     private String url;
 }
