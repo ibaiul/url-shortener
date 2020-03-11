@@ -43,7 +43,7 @@ public class ShortUrlController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable UUID id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
         service.disable(id);
     }
 }

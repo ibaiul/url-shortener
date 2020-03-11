@@ -147,7 +147,7 @@ public class ShortUrlControllerIT {
 
         delete(url).then()
                 .assertThat()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test

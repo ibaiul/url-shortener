@@ -84,7 +84,7 @@ class AppAT {
     void deleteShortUrl(UUID id) {
         delete(crudBaseUri + '/' + id).then()
                 .assertThat()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     void ensureShortUrlDoesNotExist(String key) {
