@@ -35,6 +35,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <rest.assured.version>4.2.0</rest.assured.version>
         <spring.boot.version>2.2.5.RELEASE</spring.boot.version>
+        <springfox.version>2.9.2</springfox.version>
+        <swagger.core.version>2.1.1</swagger.core.version>
     </properties>
 
     <dependencies>
@@ -78,6 +80,21 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
             <version>${flyway.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+            <version>${springfox.version}</version>
         </dependency>
 
         <!-- TEST -->
