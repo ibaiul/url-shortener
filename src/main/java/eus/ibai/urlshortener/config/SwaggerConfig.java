@@ -1,6 +1,7 @@
 package eus.ibai.urlshortener.config;
 
 import com.google.common.base.Predicates;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -16,6 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @Import(BeanValidatorPluginsConfiguration.class)
+@ConditionalOnProperty(name = "eus.ibai.docs.enabled", havingValue = "true")
 public class SwaggerConfig {
 
     @Bean

@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: urlshortener
   datasource:
     url: jdbc:mysql://localhost:3306/urlshortener?useSSL=false
     username: user
@@ -10,3 +12,28 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
+
+management:
+  security:
+    user: user
+    pass: pass
+    role: MONITOR
+  enpoint:
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    web:
+      server:
+        auto-time-requests: true
+
+urlshortener:
+  docs:
+    enabled: true
+  metrics:
+    enabled: true

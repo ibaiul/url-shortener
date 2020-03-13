@@ -10,8 +10,7 @@
     <logger name="org.springframework" level="INFO" />
     <logger name="org.springframework.transaction" level="INFO" />
 
-    <!-- in order to debug some marshalling issues, this needs to be TRACE -->
-    <logger name="org.springframework.web.servlet.mvc" level="TRACE" />
+    <logger name="org.springframework.web.servlet.mvc" level="INFO" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
