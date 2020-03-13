@@ -20,11 +20,19 @@ public class MetricsConfig {
     @Value("${HOSTNAME:default}")
     private String hostname;
 
+    @Value("${NODE:default}")
+    private String node;
+
+    @Value("${DOMAIN:default}")
+    private String domain;
+
     @Bean
     public MeterRegistryCustomizer<PrometheusMeterRegistry> tags() {
         return registry -> registry.config()
                 .commonTags("appName", appName)
                 .commonTags("namespace", namespace)
-                .commonTags("pod", hostname);
+                .commonTags("pod", hostname)
+                .commonTags("node", node)
+                .commonTags("domain", domain);
     }
 }
