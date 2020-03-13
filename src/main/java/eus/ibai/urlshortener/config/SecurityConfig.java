@@ -1,6 +1,6 @@
 package eus.ibai.urlshortener.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,14 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${management.security.user}")
-    private String userMonitor;
+    @Autowired
+    private ManagementAccess managementAccess;
 
-    @Value("${management.security.pass}")
-    private String passMonitor;
-
-    @Value("${management.security.role}")
-    private String roleMonitor;
+    @Autowired
+    private SwaggerAccess swaggerAccess;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -31,7 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser(userMonitor).password(passwordEncoder().encode(passMonitor)).roles(roleMonitor);
+                .withUser(managementAccess.getUsername()).password(passwordEncoder().encode(managementAccess.getPassword())).roles(managementAccess.getRole())
+                .and()
+                .withUser(swaggerAccess.getUsername()).password(passwordEncoder().encode(swaggerAccess.getPassword())).roles(swaggerAccess.getRole());
     }
 
     @Override
@@ -40,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole(roleMonitor)
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole(managementAccess.getRole())
+                .antMatchers("/swagger*").hasRole(swaggerAccess.getRole())
                 .anyRequest().permitAll()
                 .and()
                 .httpBasic();

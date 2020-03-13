@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: urlshortener
+
+management:
+  enabled: true
+
+swagger:
+  enabled: true

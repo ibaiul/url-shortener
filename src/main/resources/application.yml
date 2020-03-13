@@ -14,6 +14,7 @@ spring:
     show-sql: true
 
 management:
+  enabled: true
   security:
     user: user
     pass: pass
@@ -32,8 +33,9 @@ management:
       server:
         auto-time-requests: true
 
-urlshortener:
-  docs:
-    enabled: true
-  metrics:
-    enabled: true
+swagger:
+  enabled: true
+  security:
+    user: user2
+    pass: pass2
+    role: SWAGGER

@@ -3,6 +3,7 @@ package eus.ibai.urlshortener;
 
 import eus.ibai.urlshortener.dto.CreateShortUrlDto;
 import eus.ibai.urlshortener.dto.ShortUrlDto;
+import eus.ibai.urlshortener.test.AcceptanceTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.*;
 
+@AcceptanceTest
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AppAT {
 
