@@ -27,6 +27,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.version>3.8.1</maven.compiler.version>
+        <maven.failsafe.version>2.22.2</maven.failsafe.version>
         <maven.jar.version>3.2.0</maven.jar.version>
         <maven.project.info.reports.version>3.0.0</maven.project.info.reports.version>
         <maven.site.version>3.8.2</maven.site.version>
@@ -123,7 +124,7 @@
             <artifactId>bcprov-jdk15on</artifactId>
             <version>${bouncycastle.version}</version>
         </dependency>
-        
+
         <!-- TEST -->
 
         <dependency>
@@ -214,12 +215,19 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surfire.version}</version>
                     <configuration>
+                        <argLine>${surefireArgLine}</argLine>
                         <includes>
                             <include>**/*Test.java</include>
-                            <include>**/*IT.java</include>
-                            <include>**/*AT.java</include>
                         </includes>
+                        <excludes>
+                            <exclude>**/*IT.java</exclude>
+                            <exclude>**/*AT.java</exclude>
+                        </excludes>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven.failsafe.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -237,12 +245,10 @@
                     <version>${maven.site.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-report-plugin</artifactId>
                     <version>${maven.surfire.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>${maven.project.info.reports.version}</version>
                 </plugin>
@@ -269,25 +275,107 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-<!--                <configuration>-->
-<!--                    <excludes>-->
-<!--                        <exclude>eus/ibai/urlshortener/config/**/*</exclude>-->
-<!--                    </excludes>-->
-<!--                </configuration>-->
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <argLine>${failsafeArgLine}</argLine>
+                    <includes>
+                        <include>${test.include.pattern}</include>
+                    </includes>
+                    <excludes>
+                        <exclude>${test.exclude.pattern}</exclude>
+                        <exclude>**/*Test.java</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>prepare-agent</goal>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
                         </goals>
                     </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <!--                <configuration>-->
+                <!--                    <excludes>-->
+                <!--                        <exclude>eus/ibai/urlshortener/config/**/*</exclude>-->
+                <!--                    </excludes>-->
+                <!--                </configuration>-->
+                <executions>
                     <execution>
-                        <id>jacoco-report</id>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>pre-${test.type}-test</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/coverage-reports/jacoco-${test.type}.exec</destFile>
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-${test.type}-test</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/coverage-reports/jacoco-${test.type}.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-${test.type}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>merge-unit-and-integration</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}/coverage-reports/</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                            <destFile>${project.build.directory}/coverage-reports/merged.exec</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-merged-report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/coverage-reports/merged.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-merged</outputDirectory>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>jacoco-check</id>
@@ -317,7 +405,6 @@
     <reporting>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <configuration>
                     <alwaysGenerateFailsafeReport>false</alwaysGenerateFailsafeReport>
@@ -330,4 +417,23 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <profiles>
+        <profile>
+            <id>integration-test</id>
+            <properties>
+                <test.type>it</test.type>
+                <test.include.pattern>**/*IT.java</test.include.pattern>
+                <test.exclude.pattern>**/*AT.java</test.exclude.pattern>
+            </properties>
+        </profile>
+        <profile>
+            <id>acceptance-test</id>
+            <properties>
+                <test.type>at</test.type>
+                <test.include.pattern>**/*AT.java</test.include.pattern>
+                <test.exclude.pattern>**/*IT.java</test.exclude.pattern>
+            </properties>
+        </profile>
+    </profiles>
 </project>
