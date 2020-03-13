@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(name = "eus.ibai.metrics.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "urlshortener.metrics.enabled", havingValue = "true")
 public class MetricsConfig {
 
     @Value("${spring.application.name}")

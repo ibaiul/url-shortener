@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @Import(BeanValidatorPluginsConfiguration.class)
-@ConditionalOnProperty(name = "eus.ibai.docs.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "urlshortener.docs.enabled", havingValue = "true")
 public class SwaggerConfig {
 
     @Bean
