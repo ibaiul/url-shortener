@@ -1,7 +1,6 @@
 package eus.ibai.urlshortener.service;
 
 import eus.ibai.urlshortener.dto.CreateShortUrlDto;
-import eus.ibai.urlshortener.dto.ShortUrlDto;
 import eus.ibai.urlshortener.entity.ShortUrl;
 import eus.ibai.urlshortener.repository.ShortUrlRepository;
 import org.junit.jupiter.api.Test;

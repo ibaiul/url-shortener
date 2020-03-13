@@ -32,7 +32,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ShortUrlControllerIT {
+class ShortUrlControllerIT {
 
     private static final String BASE_URI = "http://localhost:%s/urls";
 
