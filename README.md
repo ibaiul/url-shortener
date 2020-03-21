@@ -117,10 +117,10 @@ Firewall rules and basic authentication are used to restrict access to critical 
 
 Secrets are injected as part of the continuous delivery process, in this case using Jenkins instead of a vault to simplify things.
 
-## TODO
-
 #### Snyk
-Integrate Snyk to check known vulnerabilities on the dependencies.
+Snyk is integrated in the CI/CD pipeline to check for known vulnerabilities on the dependencies.
+
+## TODO
 
 #### Logs
 Send logs to my Logstash instances so that they are indexed in Elasticsearch and can be visualized in Kibana.
