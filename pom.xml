@@ -309,11 +309,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
-                <!--                <configuration>-->
-                <!--                    <excludes>-->
-                <!--                        <exclude>eus/ibai/urlshortener/config/**/*</exclude>-->
-                <!--                    </excludes>-->
-                <!--                </configuration>-->
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>
@@ -385,26 +380,6 @@
                         <configuration>
                             <dataFile>${project.build.directory}/coverage-reports/merged.exec</dataFile>
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-merged</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jacoco-check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>PACKAGE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.9</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
                         </configuration>
                     </execution>
                 </executions>
