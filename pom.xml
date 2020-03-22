@@ -37,6 +37,11 @@
         <mysql.version>8.0.18</mysql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <rest.assured.version>4.2.0</rest.assured.version>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/merged.exec</sonar.jacoco.reportPath>
+        <sonar.language>java</sonar.language>
+        <sonar.version>3.7.0.1746</sonar.version>
         <spring.boot.version>2.2.5.RELEASE</spring.boot.version>
         <springfox.version>2.9.2</springfox.version>
         <swagger.core.version>2.1.1</swagger.core.version>
@@ -256,6 +261,11 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>${sonar.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
