@@ -1,3 +1,7 @@
+[![Quality Gate Status](https://sonar.ibai.eus/api/project_badges/measure?project=eus.ibai%3Aurl-shortener&metric=alert_status)](https://sonar.ibai.eus/dashboard?id=eus.ibai%3Aurl-shortener)
+[![Coverage](https://sonar.ibai.eus/api/project_badges/measure?project=eus.ibai%3Aurl-shortener&metric=coverage)](https://sonar.ibai.eus/dashboard?id=eus.ibai%3Aurl-shortener)
+[![Lines of Code](https://sonar.ibai.eus/api/project_badges/measure?project=eus.ibai%3Aurl-shortener&metric=ncloc)](https://sonar.ibai.eus/dashboard?id=eus.ibai%3Aurl-shortener)
+
 # URL Shortener application
 
 This is a simple URL shortener application implemented using Java 11, SpringBoot and other nice technologies.
@@ -97,6 +101,8 @@ Unit, integration and acceptance tests covering %100 of the code and ensuring us
 
 Smoke tests send alerts in case of failure or availability issues
 
+SonarQube quality gate integrated into CI/CD
+
 #### Docker
 While developing I use docker containers to isolate and easily reproduce production environments. The images I using include: MySQL, Prometheus, Grafana, etc.
 
@@ -133,6 +139,6 @@ I need to pack the application in a more lightweight image with openjdk-11 and a
 Use Docker Swarm or Kubernetes to deploy service, load balancing, circuit breaking, ...
 
 #### QA
-Integrate Checkstyle, SpotBugs, PMD and SonarQube as part of the CI/CD flow
+Integrate Checkstyle, SpotBugs and PMD as part of the CI/CD flow
 
 Integrate Performance, Load, Stress and Chaos tests as part of the CI/CD flow (Gatlin, Chaos Monkey)
