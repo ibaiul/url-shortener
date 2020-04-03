@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk-slim
+FROM adoptopenjdk/openjdk11:alpine-slim
 
 ENV JAVA_OPTS=""
 ENV NODE=""
