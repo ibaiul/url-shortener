@@ -12,7 +12,7 @@
     <url>https://bitbucket.ibai.eus/projects/GH/repos/url-shortener/browse</url>
 
     <properties>
-        <bouncycastle.version>1.64</bouncycastle.version>
+        <bouncycastle.version>1.67</bouncycastle.version>
         <db.unit.version>2.5.4</db.unit.version>
         <db.unit.spring.version>1.3.0</db.unit.spring.version>
         <flyway.version>5.2.4</flyway.version>
