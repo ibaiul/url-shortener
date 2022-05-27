@@ -103,7 +103,7 @@ pipeline {
                     sh '''
                         cd .kubernetes/manifests
 
-                        cat secrets.yml.enc | base64k --decode > secrets.yml.blob
+                        cat secrets.yml.enc | base64 --decode > secrets.yml.blob
                         aws kms decrypt --region ${AWS_REGION} \
                             --ciphertext-blob fileb://secrets.yml.blob \
                             --output text \
