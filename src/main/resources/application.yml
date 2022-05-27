@@ -7,7 +7,7 @@ spring:
   application:
     name: urlshortener
   datasource:
-    url: jdbc:mysql://localhost:3306/urlshortener?useSSL=false
+    url: jdbc:mysql://localhost:3306/urlshortener
     username: user
     password: password
     driver-class-name: com.mysql.jdbc.Driver
@@ -18,9 +18,17 @@ spring:
 management:
   enabled: true
   security:
+    enabled: true
     user: user
     pass: pass
     role: MONITOR
+  health:
+    probes:
+      enabled: true
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
   enpoint:
     info:
       enabled: true

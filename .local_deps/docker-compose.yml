@@ -1,12 +1,12 @@
 version: '3.3'
 services:
   db:
-    image: mysql:5.7
+`    image: mysql:5.6.47
     restart: always
     environment:
       MYSQL_DATABASE: 'urlshortener'
-      MYSQL_USER: 'servus'
-      MYSQL_PASSWORD: 'servus'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
     ports:
       - '3306:3306'
