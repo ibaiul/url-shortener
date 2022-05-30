@@ -19,7 +19,7 @@
         <h2.version>1.4.199</h2.version>
         <hamcrest.version>2.2</hamcrest.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
-        <jackson.version>2.10.3</jackson.version>
+        <jackson.version>2.12.6.1</jackson.version>
         <jacoco.version>0.8.5</jacoco.version>
         <jaxb.version>2.3.2</jaxb.version>
         <junit.version>5.5.2</junit.version>
