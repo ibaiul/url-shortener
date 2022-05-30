@@ -39,6 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/actuator/health/liveness").permitAll()
+                .antMatchers("/actuator/health/readiness").permitAll()
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole(managementAccess.getRole())
                 .antMatchers("/swagger*").hasRole(swaggerAccess.getRole())
                 .anyRequest().permitAll()

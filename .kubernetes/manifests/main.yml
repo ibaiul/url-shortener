@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urlshortener
+  namespace: urlshortener
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: urlshortener
+      role: blue
+  template:
+    metadata:
+      labels:
+        app: urlshortener
+        role: blue
+    spec:
+      containers:
+        - name: urlshortener
+          image: ibaiul/urlshortener:$VERSION
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 45
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 45
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "400m"
+          envFrom:
+          - secretRef:
+                name: urlshortener
+          env:
+          - name: JAVA_OPTS
+            value: "-Dspring.profiles.active=$PROFILE"
+          - name: NODE
+            value: $NODE
+          - name: DOMAIN
+            value: $DOMAIN
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: urlshortener
+  namespace: urlshortener
+  labels:
+    app: urlshortener
+    role: blue
+    env: prod
+spec:
+  type: NodePort
+  selector:
+    app: urlshortener
+    role: blue
+  ports:
+    - port: 8282
+      targetPort: 8080
