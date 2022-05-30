@@ -43,7 +43,7 @@
         <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/merged.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
         <sonar.version>3.9.0.2155</sonar.version>
-        <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
+        <spring.boot.version>2.5.12</spring.boot.version>
         <springfox.version>2.9.2</springfox.version>
         <swagger.core.version>2.1.1</swagger.core.version>
     </properties>
