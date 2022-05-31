@@ -7,8 +7,8 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr:'10'))
     }
     environment {
-        registry = "ibaiul/urlshortener"
-        registryCredential = 'docker-hub'
+        DOCKER_REGISTRY = "ibaiul/urlshortener"
+        DOCKER_REGISTRY_CREDENTIAL = 'docker-hub'
         dockerImage = ''
     }
 
@@ -23,64 +23,64 @@ pipeline {
             }
         }
 
-//         stage('Unit tests') {
-//             steps {
-//                 withEnv(['JAVA_HOME=/usr/lib/jvm/java-11-openjdk']) {
-//                     withMaven(maven: 'Maven 3.5') {
-//                         sh "mvn test"
-//                     }
-//                 }
-//             }
-//         }
-//
-//         stage('Integration tests') {
-//             steps {
-//                 withEnv(['JAVA_HOME=/usr/lib/jvm/java-11-openjdk']) {
-//                     withMaven(maven: 'Maven 3.5') {
-//                         sh "mvn verify -P integration-test -Dtest=BlakenTest -DfailIfNoTests=false"
-//                     }
-//                 }
-//             }
-//         }
-//
-//         stage('Acceptance tests') {
-//             steps {
-//                 withEnv(['JAVA_HOME=/usr/lib/jvm/java-11-openjdk']) {
-//                     withMaven(maven: 'Maven 3.5') {
-//                         sh "mvn verify -P acceptance-test -Dtest=BlakenTest -DfailIfNoTests=false"
-//                     }
-//                 }
-//             }
-//         }
-//
-//         stage('Sonar') {
-//             steps {
-//                 withCredentials([string(credentialsId: 'sonarqube-ibaieus-token', variable: 'SONAR_TOKEN')]) {
-//                     configFileProvider([configFile(fileId: 'urlshortener-env', variable: 'ENV_FILE')]) {
-//                         load "${ENV_FILE}"
-//                         sh 'mvn sonar:sonar -DskipTaskScanner=true -Dsonar.login=${SONAR_TOKEN}  -Dsonar.branch.name=${BRANCH_NAME} -Dsonar.host.url=${SONAR_URL} --file pom.xml'
-//                     }
-//                 }
-//             }
-//         }
-//
-//         stage('Package JAR') {
-//             steps {
-//                 withEnv(['JAVA_HOME=/usr/lib/jvm/java-11-openjdk']) {
-//                     withMaven(maven: 'Maven 3.5') {
-//                         sh "mvn package spring-boot:repackage -DskipTests"
-//                     }
-//                 }
-//             }
-//         }
+        stage('Unit tests') {
+            steps {
+                withEnv(['JAVA_HOME=/usr/lib/jvm/java-11-openjdk']) {
+                    withMaven(maven: 'Maven 3.5') {
+                        sh "mvn test"
+                    }
+                }
+            }
+        }
 
-//         stage('Build docker image') {
-//             steps {
-//                 script {
-//                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
-//                 }
-//             }
-//         }
+        stage('Integration tests') {
+            steps {
+                withEnv(['JAVA_HOME=/usr/lib/jvm/java-11-openjdk']) {
+                    withMaven(maven: 'Maven 3.5') {
+                        sh "mvn verify -P integration-test -Dtest=BlakenTest -DfailIfNoTests=false"
+                    }
+                }
+            }
+        }
+
+        stage('Acceptance tests') {
+            steps {
+                withEnv(['JAVA_HOME=/usr/lib/jvm/java-11-openjdk']) {
+                    withMaven(maven: 'Maven 3.5') {
+                        sh "mvn verify -P acceptance-test -Dtest=BlakenTest -DfailIfNoTests=false"
+                    }
+                }
+            }
+        }
+
+        stage('Sonar') {
+            steps {
+                withCredentials([string(credentialsId: 'sonarqube-ibaieus-token', variable: 'SONAR_TOKEN')]) {
+                    configFileProvider([configFile(fileId: 'urlshortener-env', variable: 'ENV_FILE')]) {
+                        load "${ENV_FILE}"
+                        sh 'mvn sonar:sonar -DskipTaskScanner=true -Dsonar.login=${SONAR_TOKEN}  -Dsonar.branch.name=${BRANCH_NAME} -Dsonar.host.url=${SONAR_URL} --file pom.xml'
+                    }
+                }
+            }
+        }
+
+        stage('Package JAR') {
+            steps {
+                withEnv(['JAVA_HOME=/usr/lib/jvm/java-11-openjdk']) {
+                    withMaven(maven: 'Maven 3.5') {
+                        sh "mvn package spring-boot:repackage -DskipTests"
+                    }
+                }
+            }
+        }
+
+        stage('Build docker image') {
+            steps {
+                script {
+                    dockerImage = docker.build DOCKER_REGISTRY + ":$BUILD_NUMBER"
+                }
+            }
+        }
 
         stage('Snyk dependencies') {
             steps {
@@ -99,10 +99,25 @@ pipeline {
             }
         }
 
-//         stage('Snyk container') {
-//             steps {
-//             }
-//         }
+        stage('Snyk container') {
+            steps {
+                sh '''
+                    echo "=== Docker image: ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
+                    docker images
+                '''
+                snykSecurity(
+                    snykInstallation: 'snyk-latest',
+                    snykTokenId: 'snyk-ibaieus',
+                    organisation: 'ibai.eus',
+                    projectName: 'url-shortener',
+                    monitorProjectOnBuild: "${GIT_BRANCH}" == 'master',
+                    failOnIssues: true,
+                    failOnError: true,
+                    severity: 'low',
+                    additionalArguments: "-d --docker --file=Dockerfile ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
+                )
+            }
+        }
 
         stage('Release docker image') {
             when {
@@ -110,7 +125,7 @@ pipeline {
             }
             steps{
                 script {
-                    docker.withRegistry('', registryCredential) {
+                    docker.withRegistry('', DOCKER_REGISTRY_CREDENTIAL) {
                         dockerImage.push()
                     }
                 }
