@@ -7,8 +7,8 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr:'10'))
     }
     environment {
-        registry = "ibaiul/urlshortener"
-        registryCredential = 'docker-hub'
+        DOCKER_REGISTRY = "ibaiul/urlshortener"
+        DOCKER_REGISTRY_CREDENTIAL = 'docker-hub'
         dockerImage = ''
     }
 
@@ -64,10 +64,6 @@ pipeline {
             }
         }
 
-//     //    stage('Snyk dependencies') {
-//     //      snykSecurity failOnIssues: false, organisation: 'ibai.eus', projectName: 'url-shortener', snykInstallation: 'snyk-latest', snykTokenId: 'snyk-ibaieus'
-//     //    }
-
         stage('Package JAR') {
             steps {
                 withEnv(['JAVA_HOME=/usr/lib/jvm/java-11-openjdk']) {
@@ -81,15 +77,55 @@ pipeline {
         stage('Build docker image') {
             steps {
                 script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    dockerImage = docker.build DOCKER_REGISTRY + ":$BUILD_NUMBER"
                 }
             }
         }
 
+        stage('Snyk dependencies') {
+            steps {
+                withMaven(maven: 'Maven 3.5') {
+                    snykSecurity(
+                        snykInstallation: 'snyk-latest',
+                        snykTokenId: 'snyk-ibaieus',
+                        organisation: 'ibai.eus',
+                        projectName: 'url-shortener',
+                        monitorProjectOnBuild: "${GIT_BRANCH}" == 'master',
+                        failOnIssues: true,
+                        failOnError: true,
+                        severity: 'low'
+                    )
+                }
+            }
+        }
+
+        stage('Snyk container') {
+            steps {
+                sh '''
+                    echo "=== Docker image: ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
+                    docker images
+                '''
+                snykSecurity(
+                    snykInstallation: 'snyk-latest',
+                    snykTokenId: 'snyk-ibaieus',
+                    organisation: 'ibai.eus',
+                    projectName: 'url-shortener',
+                    monitorProjectOnBuild: "${GIT_BRANCH}" == 'master',
+                    failOnIssues: true,
+                    failOnError: true,
+                    severity: 'low',
+                    additionalArguments: "-d --docker --file=Dockerfile ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
+                )
+            }
+        }
+
         stage('Release docker image') {
+            when {
+                branch 'master'
+            }
             steps{
                 script {
-                    docker.withRegistry('', registryCredential) {
+                    docker.withRegistry('', DOCKER_REGISTRY_CREDENTIAL) {
                         dockerImage.push()
                     }
                 }
@@ -97,6 +133,9 @@ pipeline {
         }
 
         stage('Deploy') {
+            when {
+                branch 'master'
+            }
             steps{
                 configFileProvider([configFile(fileId: 'urlshortener-env', variable: 'ENV_FILE')]) {
                     load "${ENV_FILE}"
