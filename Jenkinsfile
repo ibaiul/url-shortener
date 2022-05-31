@@ -83,11 +83,14 @@ pipeline {
 //         }
 
         stage('Snyk dependencies') {
-            snykSecurity failOnIssues: true, organisation: 'ibai.eus', projectName: 'url-shortener', snykInstallation: 'snyk-latest', snykTokenId: 'snyk-ibaieus'
+            steps {
+                snykSecurity failOnIssues: true, organisation: 'ibai.eus', projectName: 'url-shortener', snykInstallation: 'snyk-latest', snykTokenId: 'snyk-ibaieus'
+            }
         }
 
 //         stage('Snyk container') {
-//
+//             steps {
+//             }
 //         }
 
         stage('Release docker image') {
