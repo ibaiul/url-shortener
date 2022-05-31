@@ -84,7 +84,18 @@ pipeline {
 
         stage('Snyk dependencies') {
             steps {
-                snykSecurity failOnIssues: true, organisation: 'ibai.eus', projectName: 'url-shortener', snykInstallation: 'snyk-latest', snykTokenId: 'snyk-ibaieus'
+                withMaven(maven: 'Maven 3.5') {
+                    snykSecurity(
+                        snykInstallation: 'snyk-latest',
+                        snykTokenId: 'snyk-ibaieus',
+                        organisation: 'ibai.eus',
+                        projectName: 'url-shortener',
+                        monitorProjectOnBuild: "${branch}" == master,
+                        failOnIssues: true,
+                        failOnError: true,
+                        severity: 'low'
+                    )
+                }
             }
         }
 

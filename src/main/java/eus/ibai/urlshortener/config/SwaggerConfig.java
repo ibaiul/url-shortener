@@ -1,6 +1,5 @@
 package eus.ibai.urlshortener.config;
 
-import com.google.common.base.Predicates;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,9 +25,9 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                .paths(Predicates.not(PathSelectors.regex("/error.*")))
+                .paths(PathSelectors.regex("/error.*").negate())
+                .paths(PathSelectors.regex("/actuator.*").negate())
                 .build().apiInfo(apiInfo());
-
     }
 
     private ApiInfo apiInfo() {
