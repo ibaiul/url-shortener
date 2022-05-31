@@ -64,3 +64,26 @@ spec:
   ports:
     - port: 8282
       targetPort: 8080
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: urlshortener
+  namespace: urlshortener
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: $DOMAIN
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: urlshortener
+            port:
+              number: 8282
+  ingressClassName: nginx

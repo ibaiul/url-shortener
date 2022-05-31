@@ -108,14 +108,14 @@ pipeline {
                             --ciphertext-blob fileb://secrets.yml.blob \
                             --output text \
                             --query Plaintext | base64 --decode > secrets.yml
-                        sudo kubectl apply -f secrets.yml
+                        kubectl apply -f secrets.yml
 
                         export VERSION="${BUILD_NUMBER}"
                         export PROFILE=prod
                         export NODE="${NODE}"
                         export DOMAIN="${DOMAIN}"
-                        envsubst < main.yml | sudo kubectl apply -f -
-                        sudo kubectl rollout status -n urlshortener deployment/urlshortener
+                        envsubst < main.yml | kubectl apply -f -
+                        kubectl rollout status -n urlshortener deployment/urlshortener
                     '''
                 }
             }
