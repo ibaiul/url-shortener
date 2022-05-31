@@ -90,7 +90,7 @@ pipeline {
                         snykTokenId: 'snyk-ibaieus',
                         organisation: 'ibai.eus',
                         projectName: 'url-shortener',
-                        monitorProjectOnBuild: "${branch}" == master,
+                        monitorProjectOnBuild: "${GIT_BRANCH}" == 'master',
                         failOnIssues: true,
                         failOnError: true,
                         severity: 'low'
