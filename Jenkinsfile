@@ -7,6 +7,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr:'10'))
     }
     environment {
+        BRANCH = GIT_BRANCH.minus('origin/')
         DOCKER_REGISTRY = "ibaiul/urlshortener"
         DOCKER_REGISTRY_CREDENTIAL = 'docker-hub'
         dockerImage = ''
@@ -101,10 +102,6 @@ pipeline {
 
         stage('Snyk container') {
             steps {
-                sh '''
-                    echo "=== Docker image: ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
-                    docker images
-                '''
                 snykSecurity(
                     snykInstallation: 'snyk-latest',
                     snykTokenId: 'snyk-ibaieus',
@@ -121,7 +118,7 @@ pipeline {
 
         stage('Release docker image') {
             when {
-                branch 'master'
+                expression { BRANCH == "master" }
             }
             steps{
                 script {
@@ -134,7 +131,7 @@ pipeline {
 
         stage('Deploy') {
             when {
-                branch 'master'
+                expression { BRANCH == "master" }
             }
             steps{
                 configFileProvider([configFile(fileId: 'urlshortener-env', variable: 'ENV_FILE')]) {
