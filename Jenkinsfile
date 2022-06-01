@@ -91,7 +91,7 @@ pipeline {
                         snykTokenId: 'snyk-ibaieus',
                         organisation: 'ibai.eus',
                         projectName: 'url-shortener',
-                        monitorProjectOnBuild: "${GIT_BRANCH}" == 'master',
+                        monitorProjectOnBuild: "${BRANCH}" == 'master',
                         failOnIssues: true,
                         failOnError: true,
                         severity: 'low'
@@ -107,7 +107,7 @@ pipeline {
                     snykTokenId: 'snyk-ibaieus',
                     organisation: 'ibai.eus',
                     projectName: 'url-shortener',
-                    monitorProjectOnBuild: "${GIT_BRANCH}" == 'master',
+                    monitorProjectOnBuild: "${BRANCH}" == 'master',
                     failOnIssues: true,
                     failOnError: true,
                     severity: 'low',
