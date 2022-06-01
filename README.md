@@ -1,3 +1,5 @@
+[![Build Status](https://jenkins.ibai.eus/buildStatus/icon?job=urlshortener%2Furlshortener-master)](https://jenkins.ibai.eus/job/urlshortener/job/urlshortener-master/)
+[![Known Vulnerabilities](https://snyk.io/test/github/ibaiul/url-shortener/badge.svg)](https://snyk.io/test/github/ibaiul/url-shortener)
 [![Quality Gate Status](https://sonar.ibai.eus/api/project_badges/measure?project=eus.ibai%3Aurl-shortener&metric=alert_status)](https://sonar.ibai.eus/dashboard?id=eus.ibai%3Aurl-shortener)
 [![Coverage](https://sonar.ibai.eus/api/project_badges/measure?project=eus.ibai%3Aurl-shortener&metric=coverage)](https://sonar.ibai.eus/dashboard?id=eus.ibai%3Aurl-shortener)
 [![Lines of Code](https://sonar.ibai.eus/api/project_badges/measure?project=eus.ibai%3Aurl-shortener&metric=ncloc)](https://sonar.ibai.eus/dashboard?id=eus.ibai%3Aurl-shortener)
@@ -97,7 +99,7 @@ Helps other backend and frontend developers at the time of integrating with the 
 With Spring Boot Actuator and Micrometer application/business metrics are exposed which get ingested by Prometheus in this case.
 
 #### QA
-Unit, integration and acceptance tests covering %100 of the code and ensuring user flows works as expected.
+Unit, integration and acceptance tests covering all the code and ensuring user flows works as expected.
 
 Smoke tests send alerts in case of failure or availability issues
 
@@ -110,6 +112,9 @@ In production those services run as system services to minimize the impact in th
 
 #### CI/CD
 The application is packed in a docker container and deployed using Jenkins pipelines.
+
+#### Kubernetes
+Kubernetes is used to host the application and its replicas, while traffic is served through an Nginx ingress.
 
 #### Monitoring
 Prometheus collects application metrics which I visualize using Grafana.
@@ -130,13 +135,6 @@ Snyk is integrated in the CI/CD pipeline to check for known vulnerabilities on t
 
 #### Logs
 Send logs to my Logstash instances so that they are indexed in Elasticsearch and can be visualized in Kibana.
-
-#### Docker
-I am using the official openjdk-11 image which is not very slim.
-
-I need to pack the application in a more lightweight image with openjdk-11 and alpine linux.
-
-Use Docker Swarm or Kubernetes to deploy service, load balancing, circuit breaking, ...
 
 #### QA
 Integrate Checkstyle, SpotBugs and PMD as part of the CI/CD flow
