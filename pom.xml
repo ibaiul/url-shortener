@@ -13,7 +13,7 @@
 
     <properties>
         <bouncycastle.version>1.70</bouncycastle.version>
-        <db.unit.version>2.5.4</db.unit.version>
+        <db.unit.version>2.7.3</db.unit.version>
         <db.unit.spring.version>1.3.0</db.unit.spring.version>
         <flyway.version>5.2.4</flyway.version>
         <h2.version>1.4.199</h2.version>
@@ -21,8 +21,8 @@
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
         <jackson.version>2.13.3</jackson.version>
         <jacoco.version>0.8.5</jacoco.version>
-        <jaxb.version>2.3.2</jaxb.version>
-        <junit.version>5.5.2</junit.version>
+        <jaxb.version>2.3.6</jaxb.version>
+        <junit.version>5.8.2</junit.version>
         <logback.version>1.2.11</logback.version>
         <lombok.version>1.18.10</lombok.version>
         <maven.compiler.source>11</maven.compiler.source>
@@ -148,12 +148,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
