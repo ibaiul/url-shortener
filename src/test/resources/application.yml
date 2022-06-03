@@ -5,7 +5,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;mode=MySQL
     username: root
     password: password
     driverClassName: org.h2.Driver
@@ -13,5 +13,5 @@ spring:
     console:
       enabled: true
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: eus.ibai.urlshortener.config.H2DialectExtended
     show-sql: true
