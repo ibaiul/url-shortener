@@ -33,7 +33,7 @@
         <maven.project.info.reports.version>3.0.0</maven.project.info.reports.version>
         <maven.site.version>3.8.2</maven.site.version>
         <maven.surfire.version>2.22.2</maven.surfire.version>
-        <micrometer.version>1.7.12</micrometer.version>
+        <micrometer.version>1.8.6</micrometer.version>
         <mockito.version>3.3.0</mockito.version>
         <mysql.version>8.0.29</mysql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
