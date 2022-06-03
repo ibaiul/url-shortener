@@ -106,7 +106,7 @@ pipeline {
                     snykInstallation: 'snyk-latest',
                     snykTokenId: 'snyk-ibaieus',
                     organisation: 'ibai.eus',
-                    projectName: 'url-shortener',
+                    projectName: 'url-shortener-docker',
                     monitorProjectOnBuild: "${BRANCH}" == 'master',
                     failOnIssues: true,
                     failOnError: true,

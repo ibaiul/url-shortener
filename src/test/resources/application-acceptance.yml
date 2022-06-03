@@ -1,9 +1,38 @@
 spring:
   application:
     name: urlshortener
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 
 management:
   enabled: true
+  security:
+    enabled: true
+    user: user
+    pass: pass
+    role: MONITOR
+  health:
+    probes:
+      enabled: true
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  enpoint:
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    web:
+      server:
+        auto-time-requests: true
 
 swagger:
   enabled: true

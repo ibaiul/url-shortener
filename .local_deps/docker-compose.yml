@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   db:
-    image: mysql:5.6.47
+    image: mysql:8.0.29
     restart: always
     environment:
       MYSQL_DATABASE: 'urlshortener'
@@ -13,6 +13,6 @@ services:
     expose:
       - '3306'
     volumes:
-      - my-database:/var/lib/mysql
+      - urlshortener-database:/var/lib/mysql
 volumes:
-  my-database:
+  urlshortener-database:
