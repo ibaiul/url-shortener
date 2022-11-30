@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,15 +39,15 @@ jobs:
         with:
           name: test-results
           path: |
+            **/target/surefire-reports/
             **/target/failsafe-reports/
-            **/target/surfire-reports/
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
           junit_files: |
-            target/surfire-reports/TEST-*.xml
+            target/surefire-reports/TEST-*.xml
             target/failsafe-reports/TEST-*.xml
           comment_mode: off
 
