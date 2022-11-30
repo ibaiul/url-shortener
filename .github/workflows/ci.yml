@@ -106,6 +106,17 @@ jobs:
           args: --file=Dockerfile --severity-threshold=high --policy-path=. --project-name=${SNYK_PROJECT}-docker --org=${SNYK_ORGANIZATION}
           command: ${{ env.SNYK_ACTION }}
 
+      - name: Scan Kubernetes manifests
+        uses: snyk/actions/iac@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORGANIZATION: ${{ secrets.SNYK_ORGANIZATION }}
+          SNYK_PROJECT: ${{ secrets.SNYK_PROJECT }}
+        with:
+          image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          args: --severity-threshold=low --policy-path=. --project-name=${SNYK_PROJECT}-docker --org=${SNYK_ORGANIZATION}
+          command: test
+
       - name: Login to DockerHub
         if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
         uses: docker/login-action@v2
