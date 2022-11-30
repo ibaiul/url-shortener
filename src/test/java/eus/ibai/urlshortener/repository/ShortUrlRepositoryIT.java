@@ -59,8 +59,7 @@ class ShortUrlRepositoryIT {
                 .enabled(true).build();
 
         assertThrows(DataIntegrityViolationException.class, () -> {
-            repository.save(entity);
-            repository.flush();
+            persist(entity);
         });
     }
 
@@ -120,5 +119,10 @@ class ShortUrlRepositoryIT {
         int updated = repository.disableById(DISABLED_ENTITY_ID);
 
         assertThat(updated, is(0));
+    }
+
+    private void persist(ShortUrl entity) {
+        repository.save(entity);
+        repository.flush();
     }
 }
