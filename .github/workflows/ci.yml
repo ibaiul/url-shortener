@@ -64,13 +64,17 @@ jobs:
         run: mvn package spring-boot:repackage -DskipTests
 
       - name: Set up variables
+        env:
+          SNYK_PROJECT: ${{ secrets.SNYK_PROJECT }}
         run: |
           if [ ${{ github.ref }} == 'refs/heads/master' ]; then
             echo "RELEASE_TAG=latest" >> $GITHUB_ENV
             echo "SNYK_ACTION=monitor" >> $GITHUB_ENV
+            echo "SNYK_IAC_ARGS=--report --target-name=${SNYK_PROJECT}-iac" >> $GITHUB_ENV
           else
             echo "RELEASE_TAG=beta" >> $GITHUB_ENV
             echo "SNYK_ACTION=test" >> $GITHUB_ENV
+            echo "SNYK_IAC_ARGS=--report --target-name=${SNYK_PROJECT}-iac" >> $GITHUB_ENV
           fi
 
       - name: Scan Dependencies
@@ -113,8 +117,8 @@ jobs:
           SNYK_ORGANIZATION: ${{ secrets.SNYK_ORGANIZATION }}
           SNYK_PROJECT: ${{ secrets.SNYK_PROJECT }}
         with:
-          image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          args: --severity-threshold=low --policy-path=. --project-name=${SNYK_PROJECT}-docker --org=${SNYK_ORGANIZATION}
+          args: --severity-threshold=low --policy-path=. --org=${SNYK_ORGANIZATION} ${{ env.SNYK_IAC_ARGS }}
+          file: .kubernetes/manifests
           command: test
 
       - name: Login to DockerHub
