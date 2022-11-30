@@ -74,7 +74,7 @@ jobs:
           else
             echo "RELEASE_TAG=beta" >> $GITHUB_ENV
             echo "SNYK_ACTION=test" >> $GITHUB_ENV
-            echo "SNYK_IAC_ARGS=--report --target-name=${SNYK_PROJECT}-iac" >> $GITHUB_ENV
+            echo "SNYK_IAC_ARGS=" >> $GITHUB_ENV
           fi
 
       - name: Scan Dependencies
