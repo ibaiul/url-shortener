@@ -38,12 +38,12 @@
         <mysql.version>8.0.29</mysql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <rest.assured.version>4.2.0</rest.assured.version>
-        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco-merged/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/merged.exec</sonar.jacoco.reportPath>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.language>java</sonar.language>
-        <sonar.version>3.9.0.2155</sonar.version>
+        <sonar.version>3.9.1</sonar.version>
         <spring.boot.version>2.5.14</spring.boot.version>
         <springfox.version>3.0.0</springfox.version>
         <swagger.core.version>2.1.1</swagger.core.version>
