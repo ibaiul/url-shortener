@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: temurin
+          cache: maven
+
+      - name: Unit Tests
+        run: mvn test
+
+      - name: Integration Tests
+        run: mvn verify -P integration-test -Dtest=ATest -DfailIfNoTests=false
+
+      - name: Acceptance Tests
+        run: mvn verify -P acceptance-test -Dtest=ATest -DfailIfNoTests=false
+
+      - name: Archive Test Report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-results
+          path: |
+            **/target/failsafe-reports/
+            **/target/surfire-reports/
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          junit_files: |
+            target/surfire-reports/*.xml
+            target/failsafe-reports/*.xml
+          comment_mode: off
+
+      - name: Sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT: ${{ secrets.SONAR_PROJECT }}
+        run: |
+          BRANCH_NAME=$(echo ${GITHUB_REF} | sed 's/refs\///g' | sed 's/heads\///g' | sed 's/\/merge//g' | sed 's/pull\//PR-/g')
+          mvn sonar:sonar -DskipTaskScanner=true -Dsonar.login=${SONAR_TOKEN}  -Dsonar.branch.name=${BRANCH_NAME} -Dsonar.organization=${SONAR_ORGANIZATION} -Dsonar.projectKey=${SONAR_PROJECT} --file pom.xml
+
+      - name: Package
+        run: mvn package spring-boot:repackage -DskipTests
