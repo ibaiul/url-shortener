@@ -1,5 +1,9 @@
 ignore:
   SNYK-JAVA-IOSPRINGFOX-1317096:
     - '*':
-      reason: 'No fix is available and Swagger endpoints are protected.'
-      expires: '2022-09-01'
+      reason: 'There is no fix is available. However, Swagger endpoints are protected.'
+      expires: '2023-02-01'
+  SNYK-JAVA-IOSPRINGFOX-3018911:
+    - '*':
+      reason: 'There is no fix is available. However, Swagger endpoints are protected.'
+      expires: '2023-02-01'

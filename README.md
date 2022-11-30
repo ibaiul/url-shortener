@@ -1,8 +1,8 @@
-[![Build Status](https://jenkins.ibai.eus/buildStatus/icon?job=urlshortener%2Furlshortener-master)](https://jenkins.ibai.eus/job/urlshortener/job/urlshortener-master/)
+[![CI](https://github.com/ibaiul/url-shortener/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ibaiul/url-shortener/actions/workflows/ci.yml)
 [![Known Vulnerabilities](https://snyk.io/test/github/ibaiul/url-shortener/badge.svg)](https://snyk.io/test/github/ibaiul/url-shortener)
-[![Quality Gate Status](https://sonar.ibai.eus/api/project_badges/measure?project=eus.ibai%3Aurl-shortener&metric=alert_status)](https://sonar.ibai.eus/dashboard?id=eus.ibai%3Aurl-shortener)
-[![Coverage](https://sonar.ibai.eus/api/project_badges/measure?project=eus.ibai%3Aurl-shortener&metric=coverage)](https://sonar.ibai.eus/dashboard?id=eus.ibai%3Aurl-shortener)
-[![Lines of Code](https://sonar.ibai.eus/api/project_badges/measure?project=eus.ibai%3Aurl-shortener&metric=ncloc)](https://sonar.ibai.eus/dashboard?id=eus.ibai%3Aurl-shortener)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=url-shortener&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=url-shortener)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=url-shortener&metric=coverage)](https://sonarcloud.io/summary/new_code?id=url-shortener)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=url-shortener&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=url-shortener)
 
 # URL Shortener application
 

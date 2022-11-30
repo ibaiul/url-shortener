@@ -19,7 +19,7 @@
         <h2.version>2.1.212</h2.version>
         <hamcrest.version>2.2</hamcrest.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
-        <jackson.version>2.13.3</jackson.version>
+        <jackson.version>2.13.4.2</jackson.version>
         <jacoco.version>0.8.5</jacoco.version>
         <jaxb.version>2.3.6</jaxb.version>
         <junit.version>5.8.2</junit.version>
@@ -35,14 +35,15 @@
         <maven.surfire.version>2.22.2</maven.surfire.version>
         <micrometer.version>1.8.6</micrometer.version>
         <mockito.version>3.3.0</mockito.version>
-        <mysql.version>8.0.29</mysql.version>
+        <mysql.version>8.0.31</mysql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <rest.assured.version>4.2.0</rest.assured.version>
-        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco-merged/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/merged.exec</sonar.jacoco.reportPath>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.language>java</sonar.language>
-        <sonar.version>3.9.0.2155</sonar.version>
+        <sonar.version>3.9.1</sonar.version>
         <spring.boot.version>2.5.14</spring.boot.version>
         <springfox.version>3.0.0</springfox.version>
         <swagger.core.version>2.1.1</swagger.core.version>
@@ -137,8 +138,25 @@
             <version>${hibernate-validator.version}</version>
         </dependency>
 
-        <!-- TEST -->
+        <!-- Version fixes for transient dependencies with vulnerabilities -->
+        <!-- These versions should be upgraded through the main dependency upgrade -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>9.0.68</version>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.33</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.21.9</version>
+        </dependency>
 
+        <!-- TEST -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -283,6 +301,7 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
                     <configuration>
                         <mainClass>eus.ibai.urlshortener.App</mainClass>
                     </configuration>

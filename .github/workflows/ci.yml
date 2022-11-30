@@ -1,0 +1,139 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: temurin
+          cache: maven
+
+      - name: Unit Tests
+        run: mvn test
+
+      - name: Integration Tests
+        run: mvn verify -P integration-test -Dtest=ATest -DfailIfNoTests=false
+
+      - name: Acceptance Tests
+        run: mvn verify -P acceptance-test -Dtest=ATest -DfailIfNoTests=false
+
+      - name: Archive Test Report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-results
+          path: |
+            **/target/surefire-reports/
+            **/target/failsafe-reports/
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          junit_files: |
+            target/surefire-reports/TEST-*.xml
+            target/failsafe-reports/TEST-*.xml
+          comment_mode: off
+
+      - name: Sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT: ${{ secrets.SONAR_PROJECT }}
+        run: |
+          BRANCH_NAME=$(echo ${GITHUB_REF} | sed 's/refs\///g' | sed 's/heads\///g' | sed 's/\/merge//g' | sed 's/pull\//PR-/g')
+          mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN} -Dsonar.branch.name=${BRANCH_NAME} -Dsonar.organization=${SONAR_ORGANIZATION} -Dsonar.projectKey=${SONAR_PROJECT} --file pom.xml
+
+      - name: Package
+        run: mvn package spring-boot:repackage -DskipTests
+
+      - name: Set up variables
+        env:
+          SNYK_PROJECT: ${{ secrets.SNYK_PROJECT }}
+        run: |
+          if [ ${{ github.ref }} == 'refs/heads/master' ]; then
+            echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+            echo "SNYK_ACTION=monitor" >> $GITHUB_ENV
+            echo "SNYK_IAC_ARGS=--report --target-name=${SNYK_PROJECT}-iac" >> $GITHUB_ENV
+          else
+            echo "RELEASE_TAG=beta" >> $GITHUB_ENV
+            echo "SNYK_ACTION=test" >> $GITHUB_ENV
+            echo "SNYK_IAC_ARGS=" >> $GITHUB_ENV
+          fi
+
+      - name: Scan Dependencies
+        uses: snyk/actions/maven@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORGANIZATION: ${{ secrets.SNYK_ORGANIZATION }}
+          SNYK_PROJECT: ${{ secrets.SNYK_PROJECT }}
+          JAVA_HOME: /opt/java/openjdk
+        with:
+          args: --severity-threshold=high --policy-path=. --project-name=${SNYK_PROJECT} --org=${SNYK_ORGANIZATION}
+          command: ${{ env.SNYK_ACTION }}
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v3
+        env:
+          IMAGE_NAME: ${{ secrets.DOCKER_HUB_IMAGE }}
+        with:
+          context: .
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          load: true
+          push: false
+
+      - name: Scan Docker image
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORGANIZATION: ${{ secrets.SNYK_ORGANIZATION }}
+          SNYK_PROJECT: ${{ secrets.SNYK_PROJECT }}
+          IMAGE_NAME: ${{ secrets.DOCKER_HUB_IMAGE }}
+        with:
+          image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          args: --file=Dockerfile --severity-threshold=high --policy-path=. --project-name=${SNYK_PROJECT}-docker --org=${SNYK_ORGANIZATION}
+          command: ${{ env.SNYK_ACTION }}
+
+      - name: Scan Kubernetes manifests
+        uses: snyk/actions/iac@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORGANIZATION: ${{ secrets.SNYK_ORGANIZATION }}
+          SNYK_PROJECT: ${{ secrets.SNYK_PROJECT }}
+        with:
+          args: --severity-threshold=low --policy-path=. --org=${SNYK_ORGANIZATION} ${{ env.SNYK_IAC_ARGS }}
+          file: .kubernetes/manifests
+          command: test
+
+      - name: Login to DockerHub
+        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASS }}
+
+      - name: Docker Publish
+        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v3
+        env:
+          IMAGE_NAME: ${{ secrets.DOCKER_HUB_IMAGE }}
+        with:
+          context: .
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }},${{ env.IMAGE_NAME }}:${{ env.RELEASE_TAG }}
+          push: true

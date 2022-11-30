@@ -1,5 +1,8 @@
 FROM adoptopenjdk/openjdk11:alpine-slim
 
+RUN addgroup -S app && adduser -S app -G app
+USER app
+
 ENV JAVA_OPTS=""
 ENV NODE=""
 ENV DOMAIN=""

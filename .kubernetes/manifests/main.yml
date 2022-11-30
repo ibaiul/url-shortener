@@ -18,6 +18,7 @@ spec:
       containers:
         - name: urlshortener
           image: ibaiul/urlshortener:$VERSION
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -44,6 +45,12 @@ spec:
             value: $NODE
           - name: DOMAIN
             value: $DOMAIN
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
 
 ---
 
